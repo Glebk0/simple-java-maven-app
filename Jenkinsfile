@@ -4,16 +4,7 @@ podTemplate(
       name: 'maven',
       image: 'maven:latest',
       command: 'cat',
-      ttyEnabled: true),
-    containerTemplate(
-      name: 'docker',
-      image: 'docker:latest',
-      command: 'cat',
-      ttyEnabled: true,
-      envVars: [
-        secretEnvVar(key: 'DOCKER_LOGIN', secretName: 'docker-regestry-credentials', secretKey: 'username'),
-        secretEnvVar(key: 'DOCKER_PASSWORD', secretName: 'docker-regestry-credentials', secretKey: 'password')
-    )
+      ttyEnabled: true)
   ],
   volumes: [
     hostPathVolume(
