@@ -7,6 +7,10 @@ podTemplate(
       ttyEnabled: true)
   ],
   volumes: [
+    persistentVolumeClaim(
+      mountPath: '/root/.m2/repository', 
+      claimName: 'maven-repo', 
+      readOnly: false),
     hostPathVolume(
       hostPath: '/var/run/docker.sock',
       mountPath: '/var/run/docker.sock')]
