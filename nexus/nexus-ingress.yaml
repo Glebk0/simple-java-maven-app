@@ -1,0 +1,27 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+    nginx.ingress.kubernetes.io/proxy-body-size: "0"
+  name: nexus
+  namespace: nexus
+spec:
+  rules:
+    - host: nexus.minikube
+      http:
+        paths:
+          - backend:
+              serviceName: nexus-0-service
+              servicePort: 8081
+            path: /
+    - host: nexus-docker.minikube
+      http:
+        paths:
+          - backend:
+              serviceName: nexus-0-service
+              servicePort: 8123
+            path: /
+  tls:
+    - hosts:
+        - nexus-docker.minikube

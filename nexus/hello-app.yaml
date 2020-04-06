@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: hello-node
+  name: hello-node
+  namespace: hello
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: hello-node
+  template:
+    metadata:
+      labels:
+        app: hello-node
+    spec:
+      containers:
+      - image: nexus-docker.minikube/hello-node
+        imagePullPolicy: Always
+        name: hello-node
+      imagePullSecrets:
+      - name: nexus-docker-credentials
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: hello-node
+  namespace: hello
+spec:
+  selector:
+    app: hello-node
+  ports:
+    - port: 3030
+      targetPort: 3030
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: hello-node
+  namespace: hello
+  annotations:
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+    rules:
+    - http:
+        paths:
+          - backend:
+              serviceName: hello-node
+              servicePort: 3030
+            path: /hello
+
