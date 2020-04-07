@@ -21,22 +21,12 @@ spec:
     command: ["cat"]
     tty: true
     volumeMounts:
-    - name: repository
+    - name: maven-repo
       mountPath: /root/.m2/repository
-  - name: docker
-    image: docker:18.09.2
-    command: ["cat"]
-    tty: true
-    volumeMounts:
-    - name: docker-sock
-      mountPath: /var/run/docker.sock
   volumes:
   - name: repository
     persistentVolumeClaim:
-      claimName: repository
-  - name: docker-sock
-    hostPath:
-      path: /var/run/docker.sock
+      claimName: maven-repo
 """
         }
     }
