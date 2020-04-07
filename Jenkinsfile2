@@ -19,7 +19,7 @@ podTemplate(
       mountPath: '/var/run/docker.sock')]
 )
 
-podTemplate {
+{
     node(POD_LABEL) {
 
         options {
