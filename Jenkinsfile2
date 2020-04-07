@@ -20,9 +20,6 @@ podTemplate(
 )
 
 {
-    options {
-        skipDefaultCheckout true
-    }
     node(POD_LABEL) {
 
 
