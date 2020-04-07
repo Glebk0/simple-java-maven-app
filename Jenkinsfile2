@@ -19,42 +19,39 @@ podTemplate(
       mountPath: '/var/run/docker.sock')]
 )
 
-pipeline {
-    agent {
-        kubernetes {
-            label 'test-app'
+podTemplate {
+    node(POD_LABEL) {
+
+        options {
+            skipDefaultCheckout true
         }
-    }
 
-    options {
-        skipDefaultCheckout true
-    }
-
-    stages {
-        stage ('checkout') {
-            steps {
-                script {
-                    def repo = checkout scm
-                    revision = sh(script: 'git log -1 --format=\'%h.%ad\' --date=format:%Y%m%d-%H%M | cat', returnStdout: true).trim()
-                    branch = repo.GIT_BRANCH.take(20).replaceAll('/', '_')
-                    if (branch != 'master') {
-                        revision += "-${branch}"
+        stages {
+            stage ('checkout') {
+                steps {
+                    script {
+                        def repo = checkout scm
+                        revision = sh(script: 'git log -1 --format=\'%h.%ad\' --date=format:%Y%m%d-%H%M | cat', returnStdout: true).trim()
+                        branch = repo.GIT_BRANCH.take(20).replaceAll('/', '_')
+                        if (branch != 'master') {
+                            revision += "-${branch}"
+                        }
+                        sh "echo 'Building revision: ${revision}'"
                     }
-                    sh "echo 'Building revision: ${revision}'"
                 }
             }
-        }
-        stage ('compile') {
-            steps {
-                container('maven') {
-                    sh 'mvn clean compile'
+            stage ('compile') {
+                steps {
+                    container('maven') {
+                        sh 'mvn clean compile'
+                    }
                 }
             }
-        }
-        stage ('build artifact') {
-            steps {
-                container('maven') {
-                    sh "mvn package -Dmaven.test.skip -Drevision=${revision}"
+            stage ('build artifact') {
+                steps {
+                    container('maven') {
+                        sh "mvn package -Dmaven.test.skip -Drevision=${revision}"
+                    }
                 }
             }
         }
