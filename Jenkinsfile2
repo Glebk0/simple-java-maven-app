@@ -20,11 +20,12 @@ podTemplate(
 )
 
 {
+    options {
+        skipDefaultCheckout true
+    }
     node(POD_LABEL) {
 
-        options {
-            skipDefaultCheckout true
-        }
+
 
         stages {
             stage ('checkout') {
