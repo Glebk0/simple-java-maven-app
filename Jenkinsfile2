@@ -20,7 +20,11 @@ podTemplate(
 )
 
 pipeline {
-
+    agent {
+        kubernetes {
+            label 'test-app'
+        }
+    }
 
     options {
         skipDefaultCheckout true
