@@ -1,6 +1,4 @@
-def branch
-def revision
-def registryIp
+
 podTemplate(
   containers: [
     containerTemplate(
