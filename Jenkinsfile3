@@ -1,0 +1,34 @@
+podTemplate(yaml: """
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    some-label: some-label-value
+spec:
+  containers:
+  - name: maven
+    image: maven:latest
+    command:
+    - cat
+    tty: true
+    volumeMounts:
+      - name: mvn-settings-vol
+        mountPath: /my/path/to
+  volumes:
+    - name: mvn-settings-vol
+      secret:
+        secretName: mvn-settings
+"""
+)
+{
+  node(POD_LABEL) {
+    stage('Get a Maven project') {
+      git 'https://github.com/Glebk0/simple-java-maven-app.git'
+      container('maven') {
+        stage('Build a Maven project') {
+          sh 'mvn -B clean install'
+        }
+      }
+    }
+  }
+}

@@ -8,12 +8,12 @@ podTemplate(
   ],
   volumes: [
     persistentVolumeClaim(
-      mountPath: '/root/.m2/repository', 
+      mountPath: '/root/.m2nrepo', 
       claimName: 'maven-repo', 
       readOnly: false),
-    hostPathVolume(
-      hostPath: '/var/run/docker.sock',
-      mountPath: '/var/run/docker.sock')]
+    secretVolume(
+      secretName: 'mvn-settings',
+      mountPath: '/root/.m2/')]
 )
 {
   node(POD_LABEL) {
